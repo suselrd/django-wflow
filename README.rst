@@ -6,6 +6,11 @@ A workflow solution for django applications, based on django-workflows core.
 
 Changelog
 =========
+0.2.3
+-----
+
+Fixed method to get the allowed transitions (GRANT all permissions to superusers).
+
 0.2.2
 -----
 

@@ -184,27 +184,30 @@ class State(models.Model):
     def get_allowed_transitions(self, obj, user):
         """Returns all allowed transitions for passed object and user.
         """
+        if user.is_superuser:
+            return self.transitions.all()
+
         from django.db.models.query import Q
         from django.contrib.contenttypes.models import ContentType
         ctype = ContentType.objects.get_for_model(obj)
 
         roles = Role.objects.filter(
-            Q (
+            Q(
                 principalrolerelation__user=user,
                 principalrolerelation__content_type=None,
                 principalrolerelation__content_id=None
             ) |
-            Q (
+            Q(
                 principalrolerelation__group__user=user,
                 principalrolerelation__content_type=None,
                 principalrolerelation__content_id=None
             ) |
-            Q (
+            Q(
                 principalrolerelation__user=user,
                 principalrolerelation__content_type=ctype,
                 principalrolerelation__content_id=obj.id
             ) |
-            Q (
+            Q(
                 principalrolerelation__group__user=user,
                 principalrolerelation__content_type=ctype,
                 principalrolerelation__content_id=obj.id
@@ -212,8 +215,8 @@ class State(models.Model):
         ).distinct()
 
         return self.transitions.filter(
-            Q (permission=None) |
-            Q (
+            Q(permission=None) |
+            Q(
                 permission__objectpermission__content_type=ctype,
                 permission__objectpermission__content_id=obj.id,
                 permission__objectpermission__role__in=roles
