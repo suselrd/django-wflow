@@ -6,6 +6,11 @@ A workflow solution for django applications, based on django-workflows core.
 
 Changelog
 =========
+0.2.4
+-----
+
+Fixed method ``create_manager_get_queryset_method`` inside of decorators.
+
 0.2.3
 -----
 

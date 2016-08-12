@@ -48,12 +48,15 @@ def create_queryset_state_method(state_name):
 
 def create_manager_get_queryset_method(manager, queryset_mixin):
     def manager_get_queryset_method(self):
-        queryset_class = manager.get_queryset().__class__
+        original_queryset = manager.get_queryset()
+        queryset_class = original_queryset.__class__
 
         class ExtendedQuerySet(queryset_mixin, queryset_class):
             pass
 
-        return ExtendedQuerySet(self.model, using=self._db)
+        new_queryset = ExtendedQuerySet(self.model, using=self._db)
+        new_queryset.query = original_queryset.query.clone()
+        return new_queryset
     return manager_get_queryset_method
 
 

@@ -436,6 +436,7 @@ def set_state(obj, state):
     else:
         sor.state = state
         sor.save()
+        obj.current_state = state
     update_permissions(obj)
 
 
